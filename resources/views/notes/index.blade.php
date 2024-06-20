@@ -12,7 +12,23 @@
             </x-alert-success>
 
             @if (request()->routeIs('notes.index'))
-            <a href="{{ route('notes.create') }}" class="btn-link btn-lg mb-2">+ New Note</a>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                <div class="flex border rounded-md overflow-hidden mb-4 md:mb-0">
+                    <div class="px-4 py-2 bg-white border-r">
+                        <p class="text-sm text-gray-600">Total Notes</p>
+                        <p class="text-lg font-semibold">{{ Auth::user()->notes->count() }}</p>
+                    </div>
+                    <div class="px-4 py-2 bg-white border-r">
+                        <p class="text-sm text-gray-600">Pending</p>
+                        <p class="text-lg font-semibold text-amber-500">{{ Auth::user()->notes->filter(fn($note) => $note->transactions->contains('status', 'pending'))->count() }}</p>
+                    </div>
+                    <div class="px-4 py-2 bg-white">
+                        <p class="text-sm text-gray-600">Completed</p>
+                        <p class="text-lg font-semibold text-emerald-500">{{ Auth::user()->notes->filter(fn($note) => $note->transactions->contains('status', 'completed'))->count() }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('notes.create') }}" class="btn-link btn-lg">+ New Note</a>
+            </div>
             @endif
 
             @forelse ($notes as $note)
